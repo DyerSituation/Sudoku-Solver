@@ -13,7 +13,7 @@ import sys
 
 ROW = "ABCDEFGHI"
 COL = "123456789"
-TIME_LIMIT = 20.  # max seconds per board
+TIME_LIMIT = 2.  # max seconds per board
 out_filename = 'output.txt'
 src_filename = 'sudokus_start.txt'
 
@@ -66,7 +66,10 @@ def write_solved(board, f_name=out_filename, mode='w+'):
 class CSP:
     def __init__(self, board):
         self.board = board
-        
+        self.unassigned = []
+        for key, value in self.board.iteritems():
+            if value == 0:
+                self.unassigned.append(key)
     
 def backtracking(board):
     """Takes a board and returns solved board."""
@@ -81,6 +84,7 @@ def backtracking(board):
     return board_to_string(solved_board)
 
 def helper(csp):
+    
     board = csp.board
     #check if complete
     if 0 not in board.values():
@@ -91,28 +95,27 @@ def helper(csp):
         #add value
         board[var] = value
         csp.board = board
-        print "test"
         result = helper(csp)
         if result != "fail":
-            "print gogogo"
             return result
         board[var] = 0
-        print "mission failed, we'll get em next time"
-        return "fail" 
+    return "fail" 
 
 def selectUnassigned(csp):
-    board = csp.board
-    for key, value in board.iteritems():
-        if value == 0:
-            print key
-            return key
-
+    minVar = ""
+    minD = sys.maxint
+    for var in csp.unassigned:
+        domain = getDomain(var, csp)
+        if len(domain) < minD:
+            minD = len(domain)
+            minVar = var
+    return minVar
 def getDomain(var, csp):
     #TODO
     board = csp.board
     domain = [1,2,3,4,5,6,7,8,9]
 
-    
+    print ("still GOing" + var)
     #row
         #letter
     for num in COL:
