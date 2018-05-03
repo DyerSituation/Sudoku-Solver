@@ -66,6 +66,10 @@ def write_solved(board, f_name=out_filename, mode='w+'):
 class CSP:
     def __init__(self, board):
         self.board = board
+        self.unassigned = []
+        for key, value in self.board.iteritems():
+            if value == 0:
+                self.unassigned.append(key)
         
     
 def backtracking(board):
@@ -91,21 +95,23 @@ def helper(csp):
         #add value
         board[var] = value
         csp.board = board
-        print "test"
+        csp.unassigned.remove(var)
         result = helper(csp)
         if result != "fail":
-            "print gogogo"
             return result
         board[var] = 0
-        print "mission failed, we'll get em next time"
-        return "fail" 
+        csp.unassigned.append(var)
+    return "fail" 
 
 def selectUnassigned(csp):
-    board = csp.board
-    for key, value in board.iteritems():
-        if value == 0:
-            print key
-            return key
+    minVar = ""
+    minD = sys.maxint
+    for var in csp.unassigned:
+        domain = getDomain(var, csp)
+        if len(domain) < minD:
+            minD = len(domain)
+            minVar = var
+    return minVar
 
 def getDomain(var, csp):
     #TODO
