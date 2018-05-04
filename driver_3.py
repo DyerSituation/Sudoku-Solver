@@ -10,10 +10,11 @@ Saves output to output.txt
 """
 
 import sys
+import time
 
 ROW = "ABCDEFGHI"
 COL = "123456789"
-TIME_LIMIT = 20.  # max seconds per board
+TIME_LIMIT = 5.  # max seconds per board
 out_filename = 'output.txt'
 src_filename = 'sudokus_start.txt'
 
@@ -52,8 +53,8 @@ def write_solved(board, f_name=out_filename, mode='w+'):
         Specify mode='a+' to append.
     """
     result = backtracking(board)
-    print(result)  # TODO: Comment out prints when timing runs.
-    print()
+    #print(result)  # TODO: Comment out prints when timing runs.
+    #print()
 
     # Write board to file
     outfile = open(f_name, mode)
@@ -167,7 +168,8 @@ def getDomain(var, csp):
 
     
 if __name__ == '__main__':
-
+    
+    start = time.time()
     if len(sys.argv) > 1:  # Run a single board, as done during grading
         board = string_to_board(sys.argv[1])
         write_solved(board)
@@ -191,9 +193,13 @@ if __name__ == '__main__':
 
             # Parse boards to dict representation
             board = string_to_board(line)
-            print_board(board)  # TODO: Comment this out when timing runs.
+            
+            #print_board(board)  # TODO: Comment this out when timing runs.
 
             # Append solved board to output.txt
             write_solved(board, mode='a+')
 
         print("Finished all boards in file.")
+        
+    end = time.time()
+    print(end - start)
